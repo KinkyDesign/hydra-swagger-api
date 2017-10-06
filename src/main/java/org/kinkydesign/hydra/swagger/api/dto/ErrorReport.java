@@ -10,6 +10,7 @@ package org.kinkydesign.hydra.swagger.api.dto;
  * @author pantelispanka
  */
 public class ErrorReport {
+    
     private Integer status;
     private String errorMessage;
     private String devMessage;

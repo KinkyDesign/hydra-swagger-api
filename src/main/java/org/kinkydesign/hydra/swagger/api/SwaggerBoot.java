@@ -5,48 +5,78 @@
  */
 package org.kinkydesign.hydra.swagger.api;
 
-import io.swagger.models.Contact;
+import io.swagger.jaxrs.config.SwaggerContextService;
 import io.swagger.models.ExternalDocs;
-import io.swagger.models.Info;
 import io.swagger.models.Model;
 import io.swagger.models.Swagger;
+import io.swagger.models.Tag;
+import io.swagger.models.auth.ApiKeyAuthDefinition;
+import io.swagger.models.auth.In;
 import io.swagger.models.auth.OAuth2Definition;
 import io.swagger.models.properties.Property;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import org.kinkydesign.hydra.swagger.api.dto.ErrorReport;
+import org.kinkydesign.hydra.swagger.api.dto.swagger.AddLdModels;
+import org.kinkydesign.hydra.swagger.api.dto.swagger.SwaggerProperty;
+import org.reflections.Reflections;
 
 /**
  *
  * @author pantelispanka
  */
-public class SwaggerBoot extends HttpServlet{
-       
+public class SwaggerBoot extends HttpServlet {
+
     @Override
-    public void init(ServletConfig config) throws ServletException{
-        
-         Info info = new Info()
-                .title("Affie api")
-                .termsOfService("http://swagger.io/terms/")
-                .contact(new Contact()
-                        .email("burnyourpc@gmail.com"));
-         
-        
-        
+    public void init(ServletConfig config) throws ServletException {
+
         ServletContext context = config.getServletContext();
-        Swagger swagger = new Swagger()
-                .info(info);
+        Swagger swagger = new Swagger();
+        swagger.externalDocs(new ExternalDocs("Find out more about Swagger", "http://swagger.io"));
+        swagger.securityDefinition("api_key", new ApiKeyAuthDefinition("api_key", In.HEADER));
         swagger.securityDefinition("petstore_auth",
                 new OAuth2Definition()
-                        .implicit("http://localhost:8002/oauth/dialog")
-        );
+                        .implicit("http://petstore.swagger.io/api/oauth/dialog")
+                        .scope("read:pets", "read your pets")
+                        .scope("write:pets", "modify pets in your account"));
+        swagger.tag(new Tag()
+                .name("pet")
+                .description("Everything about your Pets")
+                .externalDocs(new ExternalDocs("Find out more", "http://swagger.io")));
+        swagger.tag(new Tag()
+                .name("store")
+                .description("Access to Petstore orders"));
+        swagger.tag(new Tag()
+                .name("user")
+                .description("Operations about user")
+                .externalDocs(new ExternalDocs("Find out more about our store", "http://swagger.io")));
         
-        context.setAttribute("swagger", swagger);
+        Model model = new AddLdModels();
+        model.setDescription("Descr");
+        model.setTitle("Title");
+        Map<String, Property> props = new HashMap<>();
+        
+        Reflections refl = new Reflections("org.kinkydesign.hydra.swagger.api.dto");
+        Package pacO = Package.getPackage("my.package");
+        
+        Set<Class<? extends Object>> allClasses = refl.getSubTypesOf(Object.class);
+        
+        for(Field f :ErrorReport.class.getDeclaredFields()){
+            Property p = new SwaggerProperty(f);
+            props.put(f.getName(), p);
+        }
+        model.setProperties(props);
+        
+        swagger.model("TestModel", model);
         
         
+        new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
     }
-    
-    
+
 }

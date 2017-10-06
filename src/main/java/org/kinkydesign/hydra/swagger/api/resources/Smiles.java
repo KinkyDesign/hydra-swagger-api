@@ -9,6 +9,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.Extension;
+import io.swagger.annotations.ExtensionProperty;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -30,29 +32,31 @@ import org.kinkydesign.hydra.swagger.api.dto.Value;
 @Produces({"application/json", "application/ld+json"})
 @Api(value = "/Smiles", tags = "Smiles")
 public class Smiles {
-    
-    
+
     @GET
     @Path("/to/cas/{smiles}")
     @Consumes({"application/json", "application/ld+json"})
     @Produces({"application/json", "application/ld+json"})
-    @ApiOperation(value="converts smiles to cas")
-    @ApiResponses( value = {@ApiResponse(code = 200 , message = "", response = ConvertedValue.class),
+    @ApiOperation(value = "converts smiles to cas")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "", response = ConvertedValue.class)
+        ,
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
-    public Response smilesToCas(@PathParam("smiles") String smiles){
-        return Response.ok().build();
-    } 
-    
-    
-    @POST
-    @Path("/to/cas")
-    @Consumes({"application/json", "application/ld+json"})
-    @Produces({"application/json", "application/ld+json"})
-    @ApiOperation(value="converts smiles to cas")
-    @ApiResponses( value = {@ApiResponse(code = 200 , message = "", response = ConvertedValue.class),
-            @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
-    public Response smileToCas(Value smiles){
+    public Response smilesToCas(@PathParam("smiles") String smiles) {
         return Response.ok().build();
     }
-    
+
+    @POST
+    @Path("/to/cas")
+    @Consumes({"application/json", "application/ld+json", "application/xml"})
+    @Produces({"application/json", "application/ld+json", "application/xml"})
+    @ApiOperation(value = "converts smiles to cas")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "", response = ConvertedValue.class)
+        ,
+            @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
+    public Response smileToCas(Value smiles) {
+        return Response.ok().build();
+    }
+
 }

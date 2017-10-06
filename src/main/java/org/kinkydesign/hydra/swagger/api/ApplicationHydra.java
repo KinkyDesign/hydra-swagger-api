@@ -27,9 +27,11 @@ import org.kinkydesign.hydra.swagger.api.resources.Smiles;
 public class ApplicationHydra extends Application{
     
     public ApplicationHydra(){
-//        io.swagger.models.Swagger swag = new Swagger();
+        io.swagger.models.Swagger swag = new Swagger();
+        
         
         BeanConfig beanConfig = new BeanConfig();
+//        beanConfig.setServletConfig(servletConfig);
         beanConfig.setDescription("A first try to document a rest api with hydra annotations and json ld through swagger tooling");
         beanConfig.setVersion("1.0");
         beanConfig.setSchemes(new String[]{"http"});
@@ -39,6 +41,8 @@ public class ApplicationHydra extends Application{
         beanConfig.setScan(true);
         
     }
+    
+    
     
     @Override
     public Set<Class<?>> getClasses() {
