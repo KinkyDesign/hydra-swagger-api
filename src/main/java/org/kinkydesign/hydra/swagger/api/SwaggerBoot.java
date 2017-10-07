@@ -15,14 +15,18 @@ import io.swagger.models.auth.In;
 import io.swagger.models.auth.OAuth2Definition;
 import io.swagger.models.properties.Property;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import org.kinkydesign.hydra.swagger.api.dto.ConvertedValue;
 import org.kinkydesign.hydra.swagger.api.dto.ErrorReport;
+import org.kinkydesign.hydra.swagger.api.dto.Value;
 import org.kinkydesign.hydra.swagger.api.dto.swagger.AddLdModels;
 import org.kinkydesign.hydra.swagger.api.dto.swagger.SwaggerProperty;
 import org.reflections.Reflections;
@@ -56,25 +60,34 @@ public class SwaggerBoot extends HttpServlet {
                 .name("user")
                 .description("Operations about user")
                 .externalDocs(new ExternalDocs("Find out more about our store", "http://swagger.io")));
+
         
-        Model model = new AddLdModels();
-        model.setDescription("Descr");
-        model.setTitle("Title");
-        Map<String, Property> props = new HashMap<>();
+
         
-        Reflections refl = new Reflections("org.kinkydesign.hydra.swagger.api.dto");
-        Package pacO = Package.getPackage("my.package");
+
+        List<Class> classes = new ArrayList<>();
+        classes.add(ErrorReport.class);
+        classes.add(ConvertedValue.class);
+        classes.add(Value.class);
         
-        Set<Class<? extends Object>> allClasses = refl.getSubTypesOf(Object.class);
+        List<Model> models = new ArrayList<>();
         
-        for(Field f :ErrorReport.class.getDeclaredFields()){
-            Property p = new SwaggerProperty(f);
-            props.put(f.getName(), p);
+        for (Class c : classes) {
+            Model model = new AddLdModels();
+            Map<String, Property> props = new HashMap<>();
+            for (Field f : c.getDeclaredFields()) {
+                Property p = new SwaggerProperty(f);
+                props.put(f.getName(), p);
+                model.setProperties(props);
+            }
+            model.setTitle(c.getSimpleName() + "_ld");
+            models.add(model);
+            swagger.model(c.getSimpleName() + "_ld", model);
         }
-        model.setProperties(props);
-        
-        swagger.model("TestModel", model);
-        
+
+        for(Model m : models){
+            swagger.model(m.getTitle(), m);
+        }
         
         new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
     }
