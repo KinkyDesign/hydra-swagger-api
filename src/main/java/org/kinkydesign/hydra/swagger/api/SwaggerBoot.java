@@ -17,16 +17,20 @@ import io.swagger.models.auth.OAuth2Definition;
 import io.swagger.models.properties.Property;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
+import org.kinkydesign.hydra.swagger.api.annotations.JsonldProperty;
 import org.kinkydesign.hydra.swagger.api.annotations.JsonldType;
 import org.kinkydesign.hydra.swagger.api.dto.ConvertedValue;
 import org.kinkydesign.hydra.swagger.api.dto.ErrorReport;
@@ -48,6 +52,7 @@ public class SwaggerBoot extends HttpServlet {
 
         ServletContext context = config.getServletContext();
         Swagger swagger = new Swagger();
+
         swagger.externalDocs(new ExternalDocs("Find out more about Swagger", "http://swagger.io"));
         swagger.securityDefinition("api_key", new ApiKeyAuthDefinition("api_key", In.HEADER));
 //        swagger.securityDefinition("petstore_auth",
@@ -71,45 +76,62 @@ public class SwaggerBoot extends HttpServlet {
         classes.add(ErrorReport.class);
         classes.add(ConvertedValue.class);
         classes.add(Value.class);
-        
+
         List<Model> models = new ArrayList<>();
-        
+
         for (Class c : classes) {
+
             AddLdModels model = new AddLdModels();
             Map<String, Property> props = new HashMap<>();
             Map<String, Object> vent = new HashMap<>();
-            
-            if(c.isAnnotationPresent(JsonldType.class)){
+
+            if (c.isAnnotationPresent(JsonldType.class)) {
                 JsonldType jld = (JsonldType) c.getAnnotation(JsonldType.class);
-                vent.put("type", jld.value());
+                PropertyExtended p = new SwaggerProperty();
+                p.setName("@type");
+                p.setDefault(jld.value());
+                p.setDescription(jld.value());
+                props.put("@type", p);
+                PropertyExtended pId = new SwaggerProperty();
+                pId.setDescription(URI.class.getSimpleName());
+                props.put("@id", pId);
             }
 
-            for(Annotation annot : c.getAnnotations()){
-                
-                System.out.println(annot.toString());
-            }
-            
             for (Field f : c.getDeclaredFields()) {
-                for(Annotation a :f.getDeclaredAnnotations()){
-                    System.out.println(a.toString());
-                }
+
                 PropertyExtended p = new SwaggerProperty(f);
+                if (f.isAnnotationPresent(JsonldProperty.class)) {
+
+                    JsonldProperty jld = (JsonldProperty) f.getAnnotation(JsonldProperty.class);
+                    Map<String, Object> ventP = new HashMap<>();
+                    ventP.put(f.getName(), jld.value());
+                    vent.put(f.getName(), jld.value());
+                    p.setVendorExtentions(ventP);
+                }
 
                 props.put(f.getName(), p);
-                if(vent.size() > 0){
-                    p.setContext(vent);
-                }
+
                 model.setProperties(props);
             }
+
+            if (vent.size() > 0) {
+                PropertyExtended p = new SwaggerProperty();
+                p.setContext(vent);
+                props.put("@context", p);
+                model.setProperties(props);
+            }
+
+            swagger.setVendorExtensions(vent);
             model.setTitle(c.getSimpleName() + "_ld");
             models.add(model);
             swagger.model(c.getSimpleName() + "_ld", model);
+
         }
 
-        for(Model m : models){
+        for (Model m : models) {
             swagger.model(m.getTitle(), m);
         }
-        
+
         new SwaggerContextService().withServletConfig(config).updateSwagger(swagger);
     }
 

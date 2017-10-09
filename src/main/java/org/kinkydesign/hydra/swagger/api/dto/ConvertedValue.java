@@ -5,12 +5,17 @@
  */
 package org.kinkydesign.hydra.swagger.api.dto;
 
+import org.kinkydesign.hydra.swagger.api.annotations.JsonldProperty;
+import org.kinkydesign.hydra.swagger.api.annotations.JsonldType;
+
 /**
  *
  * @author pantelispanka
  */
+@JsonldType("http://schema.org/object")
 public class ConvertedValue {
 
+    @JsonldProperty("http://schema.org/convertedValue")
     private String convertedValue;
 
     public String getConvertedValue() {

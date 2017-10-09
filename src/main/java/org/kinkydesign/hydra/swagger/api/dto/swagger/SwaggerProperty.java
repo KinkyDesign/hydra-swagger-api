@@ -7,6 +7,7 @@ package org.kinkydesign.hydra.swagger.api.dto.swagger;
 
 import io.swagger.models.Xml;
 import io.swagger.models.properties.Property;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Optional;
@@ -41,6 +42,11 @@ public class SwaggerProperty implements PropertyExtended{
             this._name = f.getName();
         }
         this._type = f.getType().getSimpleName();
+    }
+    
+    public SwaggerProperty(Class c, String val){
+        this._name = c.getName();
+        this._type = val;
     }
     
     
