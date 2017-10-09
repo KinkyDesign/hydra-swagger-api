@@ -15,7 +15,7 @@ import java.util.Optional;
  *
  * @author pantelispanka
  */
-public class SwaggerProperty implements Property{
+public class SwaggerProperty implements PropertyExtended{
 
     private String _title;
     private String _description;
@@ -28,9 +28,10 @@ public class SwaggerProperty implements Property{
     private Object _examble;
     private Xml _xml;
     private String _default;
-    private int _possition;
+    private Integer _possition;
     private String _access;
     private Map<String, Object> _vendorExtensions;
+    private Map<String, Object> _context;
     
     
     public SwaggerProperty(){}
@@ -40,7 +41,6 @@ public class SwaggerProperty implements Property{
             this._name = f.getName();
         }
         this._type = f.getType().getSimpleName();
-        
     }
     
     
@@ -186,6 +186,21 @@ public class SwaggerProperty implements Property{
     @Override
     public void setExample(String example) {
         this._examble = example;
+    }
+
+    @Override
+    public void setVendorExtentions(Map<String, Object> extentions) {
+        this._vendorExtensions = extentions;
+    }
+
+    @Override
+    public Map<String, Object> getContext() {
+        return this._context;
+    }
+
+    @Override
+    public void setContext(Map<String, Object> context) {
+        this._context = context;
     }
     
 }

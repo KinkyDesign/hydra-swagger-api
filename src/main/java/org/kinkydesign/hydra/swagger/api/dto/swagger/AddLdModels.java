@@ -113,6 +113,10 @@ public class AddLdModels implements Model {
         Object o = new Object();
         return o;
     }
-;
+
+//    @Override
+//    public void setVendorExtentions(Map<String, Object> vendorExtensions) {
+//        this.vendorExtensions = vendorExtensions;
+//    }
 
 }

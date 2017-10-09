@@ -5,14 +5,21 @@
  */
 package org.kinkydesign.hydra.swagger.api.dto;
 
+import org.kinkydesign.hydra.swagger.api.annotations.JsonldProperty;
+import org.kinkydesign.hydra.swagger.api.annotations.JsonldType;
+
 /**
  *
  * @author pantelispanka
  */
+@JsonldType("http://schema.org/object")
 public class ErrorReport {
     
+    @JsonldProperty("http://schema.org/httpstatus")
     private Integer status;
+    @JsonldProperty("http://schema.org/message")
     private String errorMessage;
+    @JsonldProperty("http://schema.org/stacktrace")
     private String devMessage;
 
     public Integer getStatus() {
