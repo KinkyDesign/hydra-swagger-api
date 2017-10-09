@@ -121,7 +121,7 @@ public class SwaggerBoot extends HttpServlet {
                 model.setProperties(props);
             }
 
-            swagger.setVendorExtensions(vent);
+//            swagger.setVendorExtensions(vent);
             model.setTitle(c.getSimpleName() + "_ld");
             models.add(model);
             swagger.model(c.getSimpleName() + "_ld", model);

@@ -38,7 +38,8 @@ public class Cas {
     @ApiResponses( value = {@ApiResponse(code = 200 , message = "", response = ConvertedValue.class),
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smilesToCas(@PathParam("cas") String cas){
-        return Response.ok().build();
+        ConvertedValue convVal = new ConvertedValue();
+        return Response.ok(convVal).build();
     } 
     
     
@@ -50,7 +51,8 @@ public class Cas {
     @ApiResponses( value = {@ApiResponse(code = 200 , message = "", response = ConvertedValue.class),
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smileToCas(Value cas){
-        return Response.ok().build();
+        ConvertedValue convVal = new ConvertedValue();
+        return Response.ok(convVal).build();
     }
     
 }

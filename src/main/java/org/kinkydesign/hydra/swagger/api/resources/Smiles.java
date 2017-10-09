@@ -43,7 +43,8 @@ public class Smiles {
         ,
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smilesToCas(@PathParam("smiles") String smiles) {
-        return Response.ok().build();
+        ConvertedValue convVal = new ConvertedValue();
+        return Response.ok(convVal).build();
     }
 
     @POST
@@ -56,7 +57,8 @@ public class Smiles {
         ,
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smileToCas(Value smiles) {
-        return Response.ok().build();
+        ConvertedValue convVal = new ConvertedValue();
+        return Response.ok(convVal).build();
     }
 
 }
