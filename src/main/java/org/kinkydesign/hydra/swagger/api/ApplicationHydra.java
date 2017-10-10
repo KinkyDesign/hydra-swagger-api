@@ -18,6 +18,7 @@ import org.kinkydesign.hydra.swagger.api.providers.CorsResponseFilter;
 import org.kinkydesign.hydra.swagger.api.providers.ExceptionProvider;
 import org.kinkydesign.hydra.swagger.api.providers.JsonldProvider;
 import org.kinkydesign.hydra.swagger.api.resources.Cas;
+import org.kinkydesign.hydra.swagger.api.resources.EntryPoint;
 import org.kinkydesign.hydra.swagger.api.resources.Smiles;
 
 /**
@@ -52,6 +53,7 @@ public class ApplicationHydra extends Application{
         
         resources.add(Cas.class);
         resources.add(Smiles.class);
+        resources.add(EntryPoint.class);
         
         resources.add(ExceptionProvider.class);
         resources.add(CorsRequestFilter.class);

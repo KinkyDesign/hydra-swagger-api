@@ -52,6 +52,11 @@ public class ExceptionProvider implements ExceptionMapper<Exception> {
                 er.setErrorMessage(exception.getMessage().toString());
                 return Response.status(Response.Status.FORBIDDEN).entity(er).build();
 
+            case "UNSUPPORTEDOPERATIONEXCEPTION":
+                er.setStatus(416);
+                er.setDevMessage(Arrays.toString(exception.getStackTrace()));
+                er.setErrorMessage(exception.getMessage().toString());
+                return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).entity(er).build();
         }
         er.setStatus(500);
         er.setDevMessage(Arrays.toString(exception.getStackTrace()));

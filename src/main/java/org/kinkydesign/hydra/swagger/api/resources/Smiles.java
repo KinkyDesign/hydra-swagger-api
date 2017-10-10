@@ -44,6 +44,7 @@ public class Smiles {
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smilesToCas(@PathParam("smiles") String smiles) {
         ConvertedValue convVal = new ConvertedValue();
+        convVal.setConvertedValue("D ACC 83541-34-8");
         return Response.ok(convVal).build();
     }
 
@@ -58,6 +59,11 @@ public class Smiles {
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smileToCas(Value smiles) {
         ConvertedValue convVal = new ConvertedValue();
+        convVal.setConvertedValue("D ACC 83541-34-8");
+        if("error".equals(smiles.getValue())){
+        
+            throw new UnsupportedOperationException("MediatypeNotSupperted");
+        }
         return Response.ok(convVal).build();
     }
 

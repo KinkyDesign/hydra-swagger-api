@@ -39,6 +39,7 @@ public class Cas {
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smilesToCas(@PathParam("cas") String cas){
         ConvertedValue convVal = new ConvertedValue();
+        convVal.setConvertedValue("O=C(Oc1ccccc1C(=O)O)C");
         return Response.ok(convVal).build();
     } 
     
@@ -52,6 +53,7 @@ public class Cas {
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smileToCas(Value cas){
         ConvertedValue convVal = new ConvertedValue();
+        convVal.setConvertedValue("O=C(Oc1ccccc1C(=O)O)C");
         return Response.ok(convVal).build();
     }
     
