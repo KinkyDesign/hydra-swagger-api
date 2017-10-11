@@ -111,7 +111,7 @@ public class JsonldProvider implements MessageBodyWriter<Object> {
             /**
              * Add the @id for the json ld
              */
-            String uri = uriInfo.getPath();
+            String uri = uriInfo.getAbsolutePath().toString();
             node.put("@id", uri);
             
             for(Field f : type.getDeclaredFields()){

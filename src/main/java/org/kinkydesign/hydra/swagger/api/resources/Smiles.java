@@ -37,7 +37,14 @@ public class Smiles {
     @Path("/to/cas/{smiles}")
     @Consumes({"application/json", "application/ld+json"})
     @Produces({"application/json", "application/ld+json"})
-    @ApiOperation(value = "converts smiles to cas")
+    @ApiOperation(value = "converts smiles to cas",extensions={
+                    @Extension(name="supported models",properties={
+                            @ExtensionProperty(name="returns", value="ConvertedValue"),
+                            @ExtensionProperty(name="returns ld", value="ConvertedValue_ld"), 
+                            @ExtensionProperty(name="on error", value="ErrorReport"),
+                            @ExtensionProperty(name="on error ld", value="ErrorReport_ld")
+                    })
+            })
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "", response = ConvertedValue.class)
         ,
