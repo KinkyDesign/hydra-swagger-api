@@ -21,9 +21,7 @@ import javax.ws.rs.ext.Provider;
 @Provider
 @PreMatching
 public class CorsResponseFilter implements ContainerResponseFilter{
-    
-    
-    
+
     private static final Logger LOG = Logger.getLogger(CorsResponseFilter.class.getName());
 
     /**
@@ -44,8 +42,5 @@ public class CorsResponseFilter implements ContainerResponseFilter{
         response.getHeaders().add("Access-Control-Allow-Headers", "origin, credentials, authorization, accept, content-type");
         response.getHeaders().add("Access-Control-Allow-Methods", "GET, POST, DELETE, PUT");
     }
-    
-    
-    
 }
 

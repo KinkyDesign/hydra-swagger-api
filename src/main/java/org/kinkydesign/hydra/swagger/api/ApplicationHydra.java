@@ -33,6 +33,7 @@ public class ApplicationHydra extends Application{
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setDescription("A first try to document a rest api with hydra annotations and json ld through swagger tooling");
         beanConfig.setVersion("1.0");
+        beanConfig.setTitle("Linked Swagger");
         beanConfig.setSchemes(new String[]{"http"});
         beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/HydraApi/api");

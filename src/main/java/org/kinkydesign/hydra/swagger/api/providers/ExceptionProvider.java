@@ -26,8 +26,7 @@ public class ExceptionProvider implements ExceptionMapper<Exception> {
     public Response toResponse(Exception exception) {
         ErrorReport er = new ErrorReport();
 
-        Exception exc = exception;
-        String excClassName = exc.getClass().getName();
+        String excClassName = exception.getClass().getName();
         String[] excClass = excClassName.split("\\.");
         String excName = excClass[(excClass.length - 1)].toUpperCase();
         LOG.log(Level.SEVERE, exception.getMessage());
@@ -37,25 +36,25 @@ public class ExceptionProvider implements ExceptionMapper<Exception> {
 
                 er.setStatus(400);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
-                er.setErrorMessage(exception.getMessage().toString());
+                er.setErrorMessage(exception.getMessage());
                 return Response.status(Response.Status.BAD_REQUEST).entity(er).build();
             case "NOTAUTHORIZEDEXCEPTION":
 
                 er.setStatus(404);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
-                er.setErrorMessage(exception.getMessage().toString());
+                er.setErrorMessage(exception.getMessage());
                 return Response.status(Response.Status.UNAUTHORIZED).entity(er).build();
             case "FORBIDDENEXCEPTION":
 
                 er.setStatus(403);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
-                er.setErrorMessage(exception.getMessage().toString());
+                er.setErrorMessage(exception.getMessage());
                 return Response.status(Response.Status.FORBIDDEN).entity(er).build();
 
             case "UNSUPPORTEDOPERATIONEXCEPTION":
                 er.setStatus(416);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
-                er.setErrorMessage(exception.getMessage().toString());
+                er.setErrorMessage(exception.getMessage());
                 return Response.status(Response.Status.UNSUPPORTED_MEDIA_TYPE).entity(er).build();
         }
         er.setStatus(500);

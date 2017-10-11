@@ -22,8 +22,8 @@ import javax.ws.rs.ext.Provider;
  */
 @Provider
 @PreMatching
-public class CorsRequestFilter implements ContainerRequestFilter{
-    
+public class CorsRequestFilter implements ContainerRequestFilter {
+
     private static final Logger LOG = Logger.getLogger(CorsRequestFilter.class.getName());
 
     @Context
@@ -46,6 +46,4 @@ public class CorsRequestFilter implements ContainerRequestFilter{
             request.abortWith(Response.status(Response.Status.OK).build());
         }
     }
-    
-    
 }
