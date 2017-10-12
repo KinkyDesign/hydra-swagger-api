@@ -5,10 +5,8 @@
  */
 package org.kinkydesign.hydra.swagger.api.resources;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -32,7 +30,11 @@ public class Cas {
     
     @GET
     @Path("/to/smiles/{cas}")
-    @ApiOperation(value="converts cas to smiles")
+    @ApiOperation(value="converts cas to smiles",extensions={
+            @Extension(name="openrisknet",properties={
+                    @ExtensionProperty(name="register_service", value="true")
+            })
+    })
     @Consumes({"application/json", "application/ld+json"})
     @Produces({"application/json", "application/ld+json"})
     @ApiResponses( value = {@ApiResponse(code = 200 , message = "", response = ConvertedValue.class),
@@ -48,7 +50,11 @@ public class Cas {
     @Path("/to/smiles")
     @Consumes({"application/json", "application/ld+json"})
     @Produces({"application/json", "application/ld+json"})
-    @ApiOperation(value="converts cas to smiles")
+    @ApiOperation(value="converts cas to smiles",extensions={
+            @Extension(name="openrisknet",properties={
+                    @ExtensionProperty(name="register_service", value="false")
+            })
+    })
     @ApiResponses( value = {@ApiResponse(code = 200 , message = "", response = ConvertedValue.class),
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smileToCas(Value cas){

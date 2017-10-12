@@ -41,7 +41,6 @@ public class SwaggerModifier implements ReaderListener {
         List<Class> classes = new ArrayList<>();
         classes.add(ErrorReport.class);
         classes.add(ConvertedValue.class);
-        classes.add(Value.class);
         classes.add(ConvertedValueExtension.class);
 
         List<Model> models = new ArrayList<>();

@@ -123,8 +123,7 @@ public class JsonldProvider implements MessageBodyWriter<Object> {
              */
             JsonldType jldType = type.getAnnotation(JsonldType.class);
             node.put("@type", jldType.value());
-            
-            
+
             /**
              * Add the @id for the json ld
              */

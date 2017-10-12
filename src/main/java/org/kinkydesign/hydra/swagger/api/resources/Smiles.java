@@ -39,17 +39,13 @@ public class Smiles {
     @Consumes({"application/json", "application/ld+json"})
     @Produces({"application/json", "application/ld+json"})
     @ApiOperation(value = "converts smiles to cas",extensions={
-                    @Extension(name="supported models",properties={
-                            @ExtensionProperty(name="returns", value="ConvertedValueExtension"),
-                            @ExtensionProperty(name="returns ld", value="ConvertedValueExtension_ld"),
-                            @ExtensionProperty(name="on error", value="ErrorReport"),
-                            @ExtensionProperty(name="on error ld", value="ErrorReport_ld")
+                    @Extension(name="openrisknet",properties={
+                            @ExtensionProperty(name="register_service", value="true")
                     })
             })
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "", response = ConvertedValueExtension.class)
-        ,
-            @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "", response = ConvertedValueExtension.class,responseContainer = "#/definitions/ConvertedValueExtension_ld"),
+            @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class, responseContainer = "#/definitions/ErrorReport_ld")}
+    )
     public Response smilesToCas(@PathParam("smiles") String smiles) {
         ConvertedValueExtension convVal = new ConvertedValueExtension();
         convVal.setConvertedValue("D ACC 83541-34-8");
@@ -61,10 +57,13 @@ public class Smiles {
     @Path("/to/cas")
     @Consumes({"application/json", "application/ld+json", "application/xml"})
     @Produces({"application/json", "application/ld+json", "application/xml"})
-    @ApiOperation(value = "converts smiles to cas")
+    @ApiOperation(value = "converts smiles to cas",extensions={
+            @Extension(name="openrisknet",properties={
+                    @ExtensionProperty(name="register_service", value="true")
+            })
+    })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "", response = ConvertedValueExtension.class)
-        ,
+            @ApiResponse(code = 200, message = "", response = ConvertedValueExtension.class),
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smileToCas(Value smiles) {
         ConvertedValueExtension convVal = new ConvertedValueExtension();
