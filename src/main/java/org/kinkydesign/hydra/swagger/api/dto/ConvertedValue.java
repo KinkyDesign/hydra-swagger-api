@@ -12,6 +12,7 @@ import org.kinkydesign.hydra.swagger.api.annotations.JsonldType;
  *
  * @author pantelispanka
  */
+
 @JsonldType("http://schema.org/object")
 public class ConvertedValue {
 

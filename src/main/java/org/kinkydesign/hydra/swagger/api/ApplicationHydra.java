@@ -4,11 +4,9 @@
  * and open the template in the editor.
  */
 package org.kinkydesign.hydra.swagger.api;
-
 import io.swagger.jaxrs.config.BeanConfig;
 import io.swagger.jaxrs.listing.ApiListingResource;
 import io.swagger.jaxrs.listing.SwaggerSerializers;
-
 import java.util.HashSet;
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
@@ -33,6 +31,7 @@ public class ApplicationHydra extends Application{
         BeanConfig beanConfig = new BeanConfig();
         beanConfig.setDescription("A first try to document a rest api with hydra annotations and json ld through swagger tooling");
         beanConfig.setVersion("1.0");
+        beanConfig.setTitle("Linked Swagger");
         beanConfig.setSchemes(new String[]{"http"});
         beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/HydraApi/api");
@@ -42,7 +41,6 @@ public class ApplicationHydra extends Application{
     
     @Override
     public Set<Class<?>> getClasses() {
-
         Set<Class<?>> resources = new HashSet();
         resources.add(Cas.class);
         resources.add(Smiles.class);
@@ -54,9 +52,6 @@ public class ApplicationHydra extends Application{
         resources.add(SwaggerSerializers.class);
         resources.add(ApiListingResource.class);
         resources.add(SwaggerModifier.class);
-        
         return resources;
     }
-    
-    
 }

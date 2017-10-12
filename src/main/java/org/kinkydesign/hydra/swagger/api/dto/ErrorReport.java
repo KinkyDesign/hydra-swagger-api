@@ -12,7 +12,7 @@ import org.kinkydesign.hydra.swagger.api.annotations.JsonldType;
  *
  * @author pantelispanka
  */
-@JsonldType("http://schema.org/object")
+@JsonldType("http://schema.org/errorreport")
 public class ErrorReport {
     
     @JsonldProperty("http://schema.org/httpstatus")
@@ -46,6 +46,4 @@ public class ErrorReport {
         this.devMessage = devMessage;
     }
 
-    
-    
 }
