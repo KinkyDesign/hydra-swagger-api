@@ -16,8 +16,6 @@ import org.kinkydesign.hydra.swagger.api.annotations.JsonldType;
 @JsonldType("http://schema.org/object")
 public class ConvertedValue {
 
-    private Object context;
-
     @JsonldProperty("http://schema.org/convertedValue")
     private String convertedValue;
 

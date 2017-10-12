@@ -89,16 +89,33 @@ public class JsonldProvider implements MessageBodyWriter<Object> {
         ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
         Map<String, Object> context = new HashMap<>();
 
+        /**
+         * Populate node with fields recursively and prepare context
+         */
         try {
-            
-            for (Field f : type.getDeclaredFields()) {
-                /**
-                 * Add the context of the jsonld from JsonldProperties
-                 */
-                JsonldProperty jldProp = f.getAnnotation(JsonldProperty.class);
-                String contextProp = f.getName();
-                context.put(contextProp, jldProp.value());
-            }
+            Field[] fields = type.getDeclaredFields();
+            Class tempClass = type;
+            do {
+                for (Field f : fields) {
+                    /**
+                     * Populate context with field annotation
+                     */
+                    JsonldProperty jldProp = f.getAnnotation(JsonldProperty.class);
+                    String contextProp = f.getName();
+                    context.put(contextProp, jldProp.value());
+                    /**
+                     * Add field in result
+                     */
+                    f.setAccessible(true);
+                    Object ob = f.get(t);
+                    node.putPOJO(f.getName(), ob);
+                } if (tempClass.getSuperclass()!=null) {
+                    fields = tempClass.getSuperclass().getDeclaredFields();
+                    tempClass = type.getSuperclass();
+                }
+                else
+                    fields = new Field[]{};
+            } while (fields.length!=0);
 
             node.putPOJO("@context", context);
             /**
@@ -113,14 +130,7 @@ public class JsonldProvider implements MessageBodyWriter<Object> {
              */
             String uri = uriInfo.getAbsolutePath().toString();
             node.put("@id", uri);
-            
-            for(Field f : type.getDeclaredFields()){
-                f.setAccessible(true);
-                Object ob = f.get(t);
-                node.putPOJO(f.getName(), ob);
-            }
-            
-            
+
         } catch (NullPointerException e) {
             ErrorReport err = new ErrorReport();
             err.setStatus(416);
@@ -138,11 +148,7 @@ public class JsonldProvider implements MessageBodyWriter<Object> {
             objectMapper.writeValue(entityStream, err);
             entityStream.flush();
         }
-        
-
-
         objectMapper.writeValue(entityStream, node);
         entityStream.flush();
     }
-
 }

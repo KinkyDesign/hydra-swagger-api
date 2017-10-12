@@ -20,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.kinkydesign.hydra.swagger.api.dto.ConvertedValue;
+import org.kinkydesign.hydra.swagger.api.dto.ConvertedValueExtension;
 import org.kinkydesign.hydra.swagger.api.dto.ErrorReport;
 import org.kinkydesign.hydra.swagger.api.dto.Value;
 
@@ -39,19 +40,20 @@ public class Smiles {
     @Produces({"application/json", "application/ld+json"})
     @ApiOperation(value = "converts smiles to cas",extensions={
                     @Extension(name="supported models",properties={
-                            @ExtensionProperty(name="returns", value="ConvertedValue"),
-                            @ExtensionProperty(name="returns ld", value="ConvertedValue_ld"), 
+                            @ExtensionProperty(name="returns", value="ConvertedValueExtension"),
+                            @ExtensionProperty(name="returns ld", value="ConvertedValueExtension_ld"),
                             @ExtensionProperty(name="on error", value="ErrorReport"),
                             @ExtensionProperty(name="on error ld", value="ErrorReport_ld")
                     })
             })
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "", response = ConvertedValue.class)
+        @ApiResponse(code = 200, message = "", response = ConvertedValueExtension.class)
         ,
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smilesToCas(@PathParam("smiles") String smiles) {
-        ConvertedValue convVal = new ConvertedValue();
+        ConvertedValueExtension convVal = new ConvertedValueExtension();
         convVal.setConvertedValue("D ACC 83541-34-8");
+        convVal.setSomeIntValue(0);
         return Response.ok(convVal).build();
     }
 
@@ -61,14 +63,14 @@ public class Smiles {
     @Produces({"application/json", "application/ld+json", "application/xml"})
     @ApiOperation(value = "converts smiles to cas")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "", response = ConvertedValue.class)
+        @ApiResponse(code = 200, message = "", response = ConvertedValueExtension.class)
         ,
             @ApiResponse(code = 500, message = "Unkown Error", response = ErrorReport.class)})
     public Response smileToCas(Value smiles) {
-        ConvertedValue convVal = new ConvertedValue();
+        ConvertedValueExtension convVal = new ConvertedValueExtension();
         convVal.setConvertedValue("D ACC 83541-34-8");
+        convVal.setSomeIntValue(0);
         if("error".equals(smiles.getValue())){
-        
             throw new UnsupportedOperationException("MediatypeNotSupperted");
         }
         return Response.ok(convVal).build();

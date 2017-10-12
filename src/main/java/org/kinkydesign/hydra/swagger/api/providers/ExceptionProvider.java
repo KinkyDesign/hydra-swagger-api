@@ -25,7 +25,6 @@ public class ExceptionProvider implements ExceptionMapper<Exception> {
     @Override
     public Response toResponse(Exception exception) {
         ErrorReport er = new ErrorReport();
-
         String excClassName = exception.getClass().getName();
         String[] excClass = excClassName.split("\\.");
         String excName = excClass[(excClass.length - 1)].toUpperCase();
@@ -33,24 +32,20 @@ public class ExceptionProvider implements ExceptionMapper<Exception> {
         LOG.log(Level.INFO, Arrays.toString(exception.getStackTrace()));
         switch (excName) {
             case "BADREQUESTEXCEPTION":
-
                 er.setStatus(400);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
                 er.setErrorMessage(exception.getMessage());
                 return Response.status(Response.Status.BAD_REQUEST).entity(er).build();
             case "NOTAUTHORIZEDEXCEPTION":
-
                 er.setStatus(404);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
                 er.setErrorMessage(exception.getMessage());
                 return Response.status(Response.Status.UNAUTHORIZED).entity(er).build();
             case "FORBIDDENEXCEPTION":
-
                 er.setStatus(403);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
                 er.setErrorMessage(exception.getMessage());
                 return Response.status(Response.Status.FORBIDDEN).entity(er).build();
-
             case "UNSUPPORTEDOPERATIONEXCEPTION":
                 er.setStatus(416);
                 er.setDevMessage(Arrays.toString(exception.getStackTrace()));
@@ -61,7 +56,5 @@ public class ExceptionProvider implements ExceptionMapper<Exception> {
         er.setDevMessage(Arrays.toString(exception.getStackTrace()));
         er.setErrorMessage("Unknown Error");
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(er).build();
-
     }
-
 }

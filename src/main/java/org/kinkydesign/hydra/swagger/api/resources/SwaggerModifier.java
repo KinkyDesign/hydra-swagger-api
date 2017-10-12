@@ -14,6 +14,7 @@ import io.swagger.models.properties.StringProperty;
 import org.kinkydesign.hydra.swagger.api.annotations.JsonldProperty;
 import org.kinkydesign.hydra.swagger.api.annotations.JsonldType;
 import org.kinkydesign.hydra.swagger.api.dto.ConvertedValue;
+import org.kinkydesign.hydra.swagger.api.dto.ConvertedValueExtension;
 import org.kinkydesign.hydra.swagger.api.dto.ErrorReport;
 import org.kinkydesign.hydra.swagger.api.dto.Value;
 
@@ -34,20 +35,23 @@ public class SwaggerModifier implements ReaderListener {
     public void afterScan(Reader reader, Swagger swagger) {
         swagger.externalDocs(new ExternalDocs("Find out more about Swagger", "http://swagger.io"));
         swagger.securityDefinition("api_key", new ApiKeyAuthDefinition("api_key", In.HEADER));
-
-        //Populate classes that we want to dynamically create Json-LD documentation
+        /**
+         * Populate classes that we want to dynamically create Json-LD documentation
+         */
         List<Class> classes = new ArrayList<>();
         classes.add(ErrorReport.class);
         classes.add(ConvertedValue.class);
         classes.add(Value.class);
+        classes.add(ConvertedValueExtension.class);
 
         List<Model> models = new ArrayList<>();
         for (Class c : classes) {
             Model model = new ModelImpl();
             Map<String, Property> props = new HashMap<>();
             Map<String, Object> vent = new HashMap<>();
-
-            //Find JsonldType annotation and populate @type and @id fields
+            /**
+             * Find JsonldType annotation and populate @type and @id fields
+             */
             if (c.isAnnotationPresent(JsonldType.class)) {
                 JsonldType jld = (JsonldType) c.getAnnotation(JsonldType.class);
                 Property p = new StringProperty();
@@ -57,14 +61,27 @@ public class SwaggerModifier implements ReaderListener {
                 pId.setDescription(URI.class.getSimpleName());
                 props.put("@id", pId);
             }
+            /**
+             * Find JsonldProperty annotations and populate @context field
+             * We check them recursively to include parent fields
+             */
 
-            //Find JsonldProperty annotations and populate @context field
-            for (Field f : c.getDeclaredFields()) {
-                if (f.isAnnotationPresent(JsonldProperty.class)) {
-                    JsonldProperty jld = (JsonldProperty) f.getAnnotation(JsonldProperty.class);
-                    vent.put(f.getName(), jld.value());
+            Field[] fields = c.getDeclaredFields();
+            Class tempClass = c;
+            do {
+                for (Field f : fields) {
+                    if (f.isAnnotationPresent(JsonldProperty.class)) {
+                        JsonldProperty jld = (JsonldProperty) f.getAnnotation(JsonldProperty.class);
+                        vent.put(f.getName(), jld.value());
+                    }
                 }
-            }
+                if (tempClass.getSuperclass()!=null) {
+                    fields = tempClass.getSuperclass().getDeclaredFields();
+                    tempClass = c.getSuperclass();
+                }
+                else
+                    fields = new Field[]{};
+            } while (fields.length!=0);
 
             if (vent.size() > 0) {
                 Property p = new StringProperty();
@@ -72,13 +89,13 @@ public class SwaggerModifier implements ReaderListener {
                 props.put("@context", p);
                 model.setProperties(props);
             }
-
-            //Set title of model, it's {initalModel}_ld
+            /**
+             * Set title of model, it's {initialModel}_ld
+             */
             model.setTitle(c.getSimpleName() + "_ld");
             models.add(model);
             swagger.model(c.getSimpleName() + "_ld", model);
         }
-
         for (Model m : models) {
             swagger.model(m.getTitle(), m);
         }
