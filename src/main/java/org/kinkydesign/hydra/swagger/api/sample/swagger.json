@@ -1,0 +1,307 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "A first try to document a rest api with hydra annotations and json ld through swagger tooling",
+    "version": "1.0",
+    "title": "Linked Swagger"
+  },
+  "host": "localhost:8080",
+  "basePath": "/HydraApi/api",
+  "tags": [{
+    "name": "Cas"
+  }, {
+    "name": "EntryPoint"
+  }, {
+    "name": "Smiles"
+  }],
+  "schemes": ["http"],
+  "paths": {
+    "/cas/to/smiles/{cas}": {
+      "get": {
+        "tags": ["Cas"],
+        "summary": "converts cas to smiles",
+        "description": "",
+        "operationId": "smilesToCas",
+        "consumes": ["application/json", "application/ld+json"],
+        "produces": ["application/json", "application/ld+json"],
+        "parameters": [{
+          "name": "cas",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ConvertedValue"
+            }
+          },
+          "500": {
+            "description": "Unkown Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorReport"
+            }
+          }
+        },
+        "x-openrisknet": {
+          "register_service": "true"
+        }
+      }
+    },
+    "/cas/to/smiles": {
+      "post": {
+        "tags": ["Cas"],
+        "summary": "converts cas to smiles",
+        "description": "",
+        "operationId": "smileToCas",
+        "consumes": ["application/json", "application/ld+json"],
+        "produces": ["application/json", "application/ld+json"],
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/Value"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ConvertedValue"
+            }
+          },
+          "500": {
+            "description": "Unkown Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorReport"
+            }
+          }
+        },
+        "x-openrisknet": {
+          "register_service": "false"
+        }
+      }
+    },
+    "/entrypoint/contexts/EntryPoint.jsonld": {
+      "get": {
+        "tags": ["EntryPoint"],
+        "operationId": "getEntryPoint",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/entrypoint/contexts/vocab": {
+      "get": {
+        "tags": ["EntryPoint"],
+        "operationId": "getVocab",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/entrypoint": {
+      "get": {
+        "tags": ["EntryPoint"],
+        "summary": "Returns the Json Ld of the api Entry point as declared from the Hydra core",
+        "description": "",
+        "operationId": "getEntryLd",
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [],
+        "responses": {
+          "default": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/smiles/to/cas/{smiles}": {
+      "get": {
+        "tags": ["Smiles"],
+        "summary": "converts smiles to cas",
+        "description": "",
+        "operationId": "smilesToCas",
+        "consumes": ["application/json", "application/ld+json"],
+        "produces": ["application/json", "application/ld+json"],
+        "parameters": [{
+          "name": "smiles",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ConvertedValueExtension"
+            }
+          },
+          "500": {
+            "description": "Unkown Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorReport"
+            }
+          }
+        },
+        "x-openrisknet": {
+          "register_service": "true"
+        }
+      }
+    },
+    "/smiles/to/cas": {
+      "post": {
+        "tags": ["Smiles"],
+        "summary": "converts smiles to cas",
+        "description": "",
+        "operationId": "smileToCas",
+        "consumes": ["application/json", "application/ld+json", "application/xml"],
+        "produces": ["application/json", "application/ld+json", "application/xml"],
+        "parameters": [{
+          "in": "body",
+          "name": "body",
+          "required": false,
+          "schema": {
+            "$ref": "#/definitions/Value"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/ConvertedValueExtension"
+            }
+          },
+          "500": {
+            "description": "Unkown Error",
+            "schema": {
+              "$ref": "#/definitions/ErrorReport"
+            }
+          }
+        },
+        "x-openrisknet": {
+          "register_service": "true"
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "ConvertedValue": {
+      "type": "object",
+      "properties": {
+        "convertedValue": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorReport": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "devMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "Value": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ConvertedValueExtension": {
+      "type": "object",
+      "properties": {
+        "convertedValue": {
+          "type": "string"
+        },
+        "someIntValue": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ErrorReport_ld": {
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "http://schema.org/errorreport"
+        },
+        "@id": {
+          "type": "string",
+          "description": "URI"
+        },
+        "@context": {
+          "type": "string",
+          "description": "{errorMessage=http://schema.org/message, devMessage=http://schema.org/stacktrace, status=http://schema.org/httpstatus}"
+        }
+      },
+      "title": "ErrorReport_ld"
+    },
+    "ConvertedValue_ld": {
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "http://schema.org/object"
+        },
+        "@id": {
+          "type": "string",
+          "description": "URI"
+        },
+        "@context": {
+          "type": "string",
+          "description": "{convertedValue=http://schema.org/convertedValue}"
+        }
+      },
+      "title": "ConvertedValue_ld"
+    },
+    "ConvertedValueExtension_ld": {
+      "properties": {
+        "@type": {
+          "type": "string",
+          "description": "http://schema.org/object"
+        },
+        "@id": {
+          "type": "string",
+          "description": "URI"
+        },
+        "@context": {
+          "type": "string",
+          "description": "{someIntValue=http://schema.org/someIntValue, convertedValue=http://schema.org/convertedValue}"
+        }
+      },
+      "title": "ConvertedValueExtension_ld"
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
